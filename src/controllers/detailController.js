@@ -96,12 +96,11 @@ const crawlPokemon = async (url, path) => {
             total: '318'
         */
     }
-    let _ = cheerio.load(body)
-
+    const _ = cheerio.load(body)
     pokemon['name'] = _('h1').text()
     pokemon['img'] = _('a[rel=lightbox] img').attr('src')
     pokemon['id'] = _('th:contains("National №")').next().eq(0).text()
-    let types = _('th:contains("Type")').eq(0).nextAll().find('a')
+    const types = _('th:contains("Type")').eq(0).nextAll().find('a')
     let type_list = []
     for (var i = 0; i < types.length; i++) {
         let type = {}
@@ -122,48 +121,48 @@ const crawlPokemon = async (url, path) => {
     pokemon['egg'] = _('th:contains("Egg Groups")').next().eq(0).text().trim()
     pokemon['gender'] = _('th:contains("Gender")').next().eq(0).text()
     pokemon['egg_cycles'] = _('th:contains("Egg cycles")').next().eq(0).text().trim()
-    let hp = _('th:contains("HP")').eq(0).nextAll()
+    const hp = _('th:contains("HP")').eq(0).nextAll()
     pokemon['hp'] = hp.eq(0).text()
     pokemon['hp_bar'] = hp.eq(1).find('div').attr('style')
     pokemon['hp_min'] = hp.eq(2).text()
     pokemon['hp_max'] = hp.eq(3).text()
-    let atk = _('th:contains("Attack")').eq(0).nextAll()
+    const atk = _('th:contains("Attack")').eq(0).nextAll()
     pokemon['atk'] = atk.eq(0).text()
     pokemon['atk_bar'] = atk.eq(1).find('div').attr('style')
     pokemon['atk_min'] = atk.eq(2).text()
     pokemon['atk_max'] = atk.eq(3).text()
-    let dfs = _('th:contains("Defense")').eq(0).nextAll()
+    const dfs = _('th:contains("Defense")').eq(0).nextAll()
     pokemon['dfs'] = dfs.eq(0).text()
     pokemon['dfs_bar'] = dfs.eq(1).find('div').attr('style')
     pokemon['dfs_min'] = dfs.eq(2).text()
     pokemon['dfs_max'] = dfs.eq(3).text()
-    let spatk = _('th:contains("Sp. Atk")').eq(0).nextAll()
+    const spatk = _('th:contains("Sp. Atk")').eq(0).nextAll()
     pokemon['sp_atk'] = spatk.eq(0).text()
     pokemon['sp_atk_bar'] = spatk.eq(1).find('div').attr('style')
     pokemon['sp_atk_min'] = spatk.eq(2).text()
     pokemon['sp_atk_max'] = spatk.eq(3).text()
-    let spdfs = _('th:contains("Sp. Def")').eq(0).nextAll()
+    const spdfs = _('th:contains("Sp. Def")').eq(0).nextAll()
     pokemon['sp_dfs'] = spdfs.eq(0).text()
     pokemon['sp_dfs_bar'] = spdfs.eq(1).find('div').attr('style')
     pokemon['sp_dfs_min'] = spdfs.eq(2).text()
     pokemon['sp_dfs_max'] = spdfs.eq(3).text()
-    let spd = _('th:contains("Speed")').eq(0).nextAll()
+    const spd = _('th:contains("Speed")').eq(0).nextAll()
     pokemon['spd'] = spd.eq(0).text()
     pokemon['spd_bar'] = spd.eq(1).find('div').attr('style')
     pokemon['spd_min'] = spd.eq(2).text()
     pokemon['spd_max'] = spd.eq(3).text()
-    pokemon['total'] = _('td[class=cell-total] b').eq(0).text()
-    let evols_img = _('span[class=infocard-lg-img]')
-    let evols_name = _('span[class*=infocard-lg-data] a[class=ent-name]')
-    let evol_list = []
-    if (evols_img.length != 0) {
-        for (var i = 0; i < evols_img.length; i++) {
+    pokemon['total'] = _('td[class*=cell-total]').eq(0).text()
+    const evolsImg = _('span[class=infocard-lg-img]')
+    const evolsName = _('span[class*=infocard-lg-data] a[class=ent-name]')
+    let evolList = []
+    if (evolsImg.length != 0) {
+        for (var i = 0; i < evolsImg.length; i++) {
             let evol = {}
-            evol['_'] = evols_name.eq(i).text()
-            evol['$'] = { url: evols_name.eq(i).attr('href'), url_img: evols_img.eq(i).find('img').attr('src') }
-            evol_list.push(evol)
+            evol['_'] = evolsName.eq(i).text()
+            evol['$'] = { url: evolsName.eq(i).attr('href'), url_img: evolsImg.eq(i).find('img').attr('src') }
+            evolList.push(evol)
         }
-        pokemon['evols'] = { 'evol': evol_list }
+        pokemon['evols'] = { 'evol': evolList }
     }
 
     const writeToFile = new Promise(resolve => {
@@ -193,8 +192,14 @@ const getDetail = async (req, res) => {
             fs.open(xmlPath, 'r', async (err, fd) => {
                 if (err) {
                     if (err.code === 'ENOENT') {
-                        console.log(pokemonName, "'s info is not found, starting to crawl!!")
-                        await crawlPokemon(req.session.pokedict[pokemonName]['url'], xmlPath)
+                        console.log(pokemonName + "'s info is not found, starting to crawl!!")
+                        if (!req.session.pokedict || req.session.pokedict.hasOwnProperty(pokemonName)) {
+                            await crawlPokemon(req.session.pokedict[pokemonName]['url'], xmlPath)
+                        } else {
+                            res.locals.homeUrl = req.protocol + '://' + req.get('host')
+                            res.locals.crtUrl = res.locals.homeUrl + req.originalUrl
+                            return res.render('404.pug')
+                        }
                     }
                 }
                 readXml(xmlPath, (data) => {

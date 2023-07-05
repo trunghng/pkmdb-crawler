@@ -56,14 +56,14 @@ const crawlPokedex = async () => {
         pokemon['url'] = pdata.find('a[class=ent-name]').attr('href')
         pokemon['img'] = data.eq(i).find('span[class*=infocard-lg-img] img').attr('src')
         const types = pdata.find('a[class*=itype]').eq(0)
-        let type_list = []
+        let typeList = []
         for (var j = 0; j < types.length; j++) {
             let type = {}
             type['_'] = types.eq(j).text()
             type['$'] = { url: types.eq(j).attr('href') }
-            type_list.push(type)
+            typeList.push(type)
         }
-        pokemon['types'] = { 'type': type_list }
+        pokemon['types'] = { 'type': typeList }
         pokedex.push({'pokemon': pokemon})
     }
 
@@ -99,9 +99,9 @@ const getPokedex = (rawPokedex) => {
 }
 
 const getHomepage = (req, res) => {
-	res.locals.pokedex = pokedex
+    res.locals.pokedex = pokedex
     req.session.pokedict = pokedict
-	return res.render('index.pug')
+    return res.render('index.pug')
 }
 
 module.exports = {

@@ -1,9 +1,9 @@
 const path = require('path')
 const express = require('express')
+const session = require('express-session')
 const config = require('./config')
 const indexRouter = require('./routes/index')
 const detailRouter = require('./routes/detail')
-const session = require('express-session')
 
 // app setup
 const app = express()
@@ -26,3 +26,11 @@ app.use(session({
 // routing
 app.use('/', indexRouter)
 app.use('/pokemon/', detailRouter)
+
+// handle 404 status code
+app.all('*', (req, res) => {
+	res.status(404)
+	res.locals.homeUrl = req.protocol + '://' + req.get('host')
+    res.locals.crtUrl = res.locals.homeUrl + req.originalUrl
+    return res.render('404.pug')
+})
