@@ -56,7 +56,7 @@ const crawlPokedex = async () => {
         pokemon['name'] = pdata.find('a[class=ent-name]').eq(0).text()
         pokemon['url'] = pdata.find('a[class=ent-name]').attr('href')
         pokemon['img'] = data.eq(i).find('span[class*=infocard-lg-img] img').attr('src')
-        const types = pdata.find('a[class*=itype]').eq(0)
+        const types = pdata.find('a[class*=itype]')
         let typeList = []
         for (var j = 0; j < types.length; j++) {
             let type = {}
