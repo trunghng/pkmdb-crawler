@@ -16,6 +16,7 @@ fs.open(xmlPath, 'r', async (err, fd) => {
     if (err) {
         if (err.code === 'ENOENT') {
             console.log('Pokedex is not found, starting to crawl!!')
+            await fs.promises.mkdir(path.join(__dirname, '..', 'data'), { recursive: true })
             await crawlPokedex()
         }
     }
