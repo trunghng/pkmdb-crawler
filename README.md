@@ -1,13 +1,13 @@
-# pkmdb-crawler
+# pkmdb-scraper
 
-A Node.js web server that crawls [Let's Go Pikachu & Let's Go Eevee](https://pokemondb.net/pokedex/game/lets-go-pikachu-eevee) Pokédex from the [Pokémon Database](https://pokemondb.net).
+A Node.js web server that extracts [Let's Go Pikachu & Let's Go Eevee](https://pokemondb.net/pokedex/game/lets-go-pikachu-eevee) Pokédex from the [Pokémon Database](https://pokemondb.net).
 
 ## Getting started
 
 - Clone the repository
 
 ```bash
-git clone https://github.com/trunghng/pkmdb-crawler <project_name>
+git clone https://github.com/trunghng/pkmdb-scraper <project_name>
 ```
 
 - Install dependencies
