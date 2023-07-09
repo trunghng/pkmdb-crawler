@@ -4,26 +4,23 @@ A Node.js web server that extracts [Let's Go Pikachu & Let's Go Eevee](https://p
 
 ## Getting started
 
-- Clone the repository
+1. Clone the repository
+    ```bash
+    git clone https://github.com/trunghng/pkmdb-scraper <project_name>
+    ```
 
-```bash
-git clone https://github.com/trunghng/pkmdb-scraper <project_name>
-```
+2. Install dependencies
+    ```bash
+    cd <project_name>
+    npm install
+    ```
 
-- Install dependencies
+3. Build and run the project
+    ```bash
+    npm start
+    ```
 
-```bash
-cd <project_name>
-npm install
-```
-
-- Build and run the project
-
-```bash
-npm start
-```
-
-- Navigate to `http://localhost:3000`
+4. Navigate to `http://localhost:3000`
 
 ## Project Structure
 ```
