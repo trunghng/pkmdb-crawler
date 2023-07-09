@@ -54,7 +54,3 @@ npm start
         ├── detail.pug
         └── index.pug
 ```
-
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
