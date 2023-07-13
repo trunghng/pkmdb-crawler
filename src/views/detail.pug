@@ -5,9 +5,7 @@ html
         title=`${pokemon.name} Pokédex: stats, evolution`
         link(rel='shortcut icon' type='image/x-icon' href='https://pokemondb.net/favicon.ico')
     body
-        header.main-header
-            div.grid-container
-                a.header-logo(href="/") Trung's Pokédex
+        include includes/header.pug
         main.main-content.grid-container
             h1= pokemon.name
             div.tabset-basics.tabs-wrapper.tabs-onetab
@@ -93,42 +91,42 @@ html
                                                 th HP
                                                 td.cell-num= pokemon.hp
                                                 td.cell-barchart
-                                                    div.barchart-bar.barchart-rank-2(style= pokemon.hp_bar)
+                                                    div(class= "barchart-bar "+pokemon.hp_bar_rank, style= pokemon.hp_bar)
                                                 td.cell-num= pokemon.hp_min
                                                 td.cell-num= pokemon.hp_max
                                             tr
                                                 th Attack
                                                 td.cell-num= pokemon.atk
                                                 td.cell-barchart
-                                                    div.barchart-bar.barchart-rank-2(style= pokemon.atk_bar)
+                                                    div(class= "barchart-bar "+pokemon.atk_bar_rank, style= pokemon.atk_bar)
                                                 td.cell-num= pokemon.atk_min
                                                 td.cell-num= pokemon.atk_max
                                             tr
                                                 th Defense
                                                 td.cell-num= pokemon.dfs
                                                 td.cell-barchart
-                                                    div.barchart-bar.barchart-rank-2(style= pokemon.dfs_bar)
+                                                    div(class= "barchart-bar "+pokemon.dfs_bar_rank, style= pokemon.dfs_bar)
                                                 td.cell-num= pokemon.dfs_min
                                                 td.cell-num= pokemon.dfs_max
                                             tr
                                                 th Sp. Atk
                                                 td.cell-num= pokemon.sp_atk
                                                 td.cell-barchart
-                                                    div.barchart-bar.barchart-rank-2(style= pokemon.sp_atk_bar)
+                                                    div(class= "barchart-bar "+pokemon.sp_atk_bar_rank, style= pokemon.sp_atk_bar)
                                                 td.cell-num= pokemon.sp_atk_min
                                                 td.cell-num= pokemon.sp_atk_max
                                             tr
                                                 th Sp. Def
                                                 td.cell-num= pokemon.sp_dfs
                                                 td.cell-barchart
-                                                    div.barchart-bar.barchart-rank-2(style= pokemon.sp_dfs_bar)
+                                                    div(class= "barchart-bar "+pokemon.sp_dfs_bar_rank, style= pokemon.sp_dfs_bar)
                                                 td.cell-num= pokemon.sp_dfs_min
                                                 td.cell-num= pokemon.sp_dfs_max
                                             tr
                                                 th Speed
                                                 td.cell-num= pokemon.spd
                                                 td.cell-barchart
-                                                    div.barchart-bar.barchart-rank-2(style= pokemon.spd_bar)
+                                                    div(class= "barchart-bar "+pokemon.spd_bar_rank, style= pokemon.spd_bar)
                                                 td.cell-num= pokemon.spd_min
                                                 td.cell-num= pokemon.spd_max
                                         tfoot
@@ -155,8 +153,7 @@ html
                                             li
                                                 small
                                                     em #{pokemon.name} does not evolve.
-        footer.main-footer
-            div.grid-container All content &amp; design &copy; Pokémon Database, 2008-2019. Pokémon images &amp; names &copy; 1995-2019 Nintendo/Game Freak.
+        include includes/footer.pug
         div#img-lightbox.whiteout(style="display: none")
             div.modal(style="width: auto")
                 span.modal-close(title="Close", onclick="close_modal()") x

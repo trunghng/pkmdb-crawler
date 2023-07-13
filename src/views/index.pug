@@ -5,9 +5,7 @@ html
         link(rel='shortcut icon' type='image/x-icon' href='https://pokemondb.net/favicon.ico')
         script(type='text/javascript' src='/js/index.js')
     body
-        header.main-header
-            div.grid-container
-                a.header-logo(href="/") Trung's Pokédex
+        include includes/header.pug
         main.main-content.grid-container
             h1 Let's Go Pikachu & Let's Go Eevee Pokédex
             input(type= "text", placeholder= "Search for pokemon by name...", id= "searchbox", onkeyup="searchplz()", style="width: 100%")
@@ -28,7 +26,6 @@ html
                                     a.itype(class= pokemon.types[0].type_name.toLowerCase(), href= pokemon.types[0].type_url)= pokemon.types[0].type_name
                                     span /
                                     a.itype(class= pokemon.types[1].type_name.toLowerCase(), href= pokemon.types[1].type_url)= pokemon.types[1].type_name
-        footer.main-footer
-            div.grid-container All content &amp; design &copy; Pokémon Database, 2008-2019. Pokémon images &amp; names &copy; 1995-2019 Nintendo/Game Freak.
+        include includes/footer.pug
 
 

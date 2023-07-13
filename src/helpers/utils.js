@@ -15,4 +15,26 @@ const readXml = (path, cb) => {
     })
 }
 
-module.exports = readXml
+
+const value2barchartRank = (value) => {
+    let rank
+    if (value <= 30) {
+        rank = 1
+    } else if (value <= 60) {
+        rank = 2
+    } else if (value <= 90) {
+        rank = 3
+    } else if (value <= 120) {
+        rank = 4
+    } else if (value <= 150) {
+        rank = 5
+    } else {
+        rank = 6
+    }
+    return `barchart-rank-${rank}`
+}
+
+
+module.exports = {
+    readXml, value2barchartRank
+}

@@ -3,8 +3,8 @@ const path = require('path')
 const cheerio = require('cheerio')
 const fetch = require('node-fetch')
 const xml2js = require('xml2js')
-const readXml = require('../utils.js')
-const config = require('../config')
+const { readXml, value2barchartRank } = require('../helpers/utils')
+const config = require('../configs/app.config')
 
 const sourceUrl = config.crawl.sourceUrl
 
@@ -15,11 +15,12 @@ const getPokemon = (rawPokemon, pokemons) => {
 		'name', 'img', 'id', 'types', 'species', 'height', 
     	'weight', 'abilities', 'ev', 'catch_rate', 'base_friendship',
     	'base_exp', 'growth_rate', 'egg', 'gender', 'egg_cycles',
-    	'hp', 'hp_bar', 'hp_min', 'hp_max', 'atk', 'atk_bar',
-    	'atk_min', 'atk_max', 'dfs', 'dfs_bar', 'dfs_min', 'dfs_max',
-    	'sp_atk', 'sp_atk_bar', 'sp_atk_min', 'sp_atk_max',
-    	'sp_dfs', 'sp_dfs_bar', 'sp_dfs_min', 'sp_dfs_max', 'spd',
-    	'spd_bar', 'spd_min', 'spd_max', 'total', 'evols'
+    	'hp', 'hp_bar_rank', 'hp_bar', 'hp_min', 'hp_max',
+        'atk', 'atk_bar_rank', 'atk_bar', 'atk_min', 'atk_max',
+        'dfs', 'dfs_bar_rank', 'dfs_bar', 'dfs_min', 'dfs_max',
+    	'sp_atk', 'sp_atk_bar_rank', 'sp_atk_bar', 'sp_atk_min', 'sp_atk_max',
+    	'sp_dfs', 'sp_dfs_bar_rank', 'sp_dfs_bar', 'sp_dfs_min', 'sp_dfs_max',
+        'spd', 'spd_bar_rank', 'spd_bar', 'spd_min', 'spd_max', 'total', 'evols'
     ]
     for (var i = 0; i < properties.length; i++) {
         if (properties[i] === 'types') {
@@ -41,6 +42,7 @@ const getPokemon = (rawPokemon, pokemons) => {
     pokemons[pokemon['name'].toLowerCase()] = pokemon
     return pokemons
 }
+
 
 const crawlPokemon = async (url, path) => {
     const res = await fetch(url)
@@ -123,31 +125,37 @@ const crawlPokemon = async (url, path) => {
     pokemon['egg_cycles'] = _('th:contains("Egg cycles")').next().eq(0).text().trim()
     const hp = _('th:contains("HP")').eq(0).nextAll()
     pokemon['hp'] = hp.eq(0).text()
+    pokemon['hp_bar_rank'] = value2barchartRank(pokemon['hp'])
     pokemon['hp_bar'] = hp.eq(1).find('div').attr('style')
     pokemon['hp_min'] = hp.eq(2).text()
     pokemon['hp_max'] = hp.eq(3).text()
     const atk = _('th:contains("Attack")').eq(0).nextAll()
     pokemon['atk'] = atk.eq(0).text()
+    pokemon['atk_bar_rank'] = value2barchartRank(pokemon['atk'])
     pokemon['atk_bar'] = atk.eq(1).find('div').attr('style')
     pokemon['atk_min'] = atk.eq(2).text()
     pokemon['atk_max'] = atk.eq(3).text()
     const dfs = _('th:contains("Defense")').eq(0).nextAll()
     pokemon['dfs'] = dfs.eq(0).text()
+    pokemon['dfs_bar_rank'] = value2barchartRank(pokemon['dfs'])
     pokemon['dfs_bar'] = dfs.eq(1).find('div').attr('style')
     pokemon['dfs_min'] = dfs.eq(2).text()
     pokemon['dfs_max'] = dfs.eq(3).text()
     const spatk = _('th:contains("Sp. Atk")').eq(0).nextAll()
     pokemon['sp_atk'] = spatk.eq(0).text()
+    pokemon['sp_atk_bar_rank'] = value2barchartRank(pokemon['sp_atk'])
     pokemon['sp_atk_bar'] = spatk.eq(1).find('div').attr('style')
     pokemon['sp_atk_min'] = spatk.eq(2).text()
     pokemon['sp_atk_max'] = spatk.eq(3).text()
     const spdfs = _('th:contains("Sp. Def")').eq(0).nextAll()
     pokemon['sp_dfs'] = spdfs.eq(0).text()
+    pokemon['sp_dfs_bar_rank'] = value2barchartRank(pokemon['spdfs'])
     pokemon['sp_dfs_bar'] = spdfs.eq(1).find('div').attr('style')
     pokemon['sp_dfs_min'] = spdfs.eq(2).text()
     pokemon['sp_dfs_max'] = spdfs.eq(3).text()
     const spd = _('th:contains("Speed")').eq(0).nextAll()
     pokemon['spd'] = spd.eq(0).text()
+    pokemon['spd_bar_rank'] = value2barchartRank(pokemon['spd'])
     pokemon['spd_bar'] = spd.eq(1).find('div').attr('style')
     pokemon['spd_min'] = spd.eq(2).text()
     pokemon['spd_max'] = spd.eq(3).text()
@@ -181,6 +189,7 @@ const crawlPokemon = async (url, path) => {
     await writeToFile
 }
 
+
 const getDetail = async (req, res) => {
 	const pokemonName = req.params.pokemonName
 	if (!req.session.pokemons) {
@@ -210,8 +219,7 @@ const getDetail = async (req, res) => {
         })
         await readFromFile
     }
-    res.locals.pokemon = req.session.pokemons[pokemonName]
-	return res.render('detail.pug')
+	return res.render('detail.pug', { pokemon: req.session.pokemons[pokemonName] })
 }
 
 module.exports = {

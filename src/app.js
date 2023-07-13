@@ -1,9 +1,9 @@
 const path = require('path')
 const express = require('express')
 const session = require('express-session')
-const config = require('./config')
-const indexRouter = require('./routes/index')
-const detailRouter = require('./routes/detail')
+const config = require('./configs/app.config')
+const indexRouter = require('./routes/index.route')
+const detailRouter = require('./routes/detail.route')
 
 // app setup
 const app = express()

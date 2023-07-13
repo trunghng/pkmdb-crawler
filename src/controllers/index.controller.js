@@ -3,8 +3,8 @@ const path = require('path')
 const cheerio = require('cheerio')
 const fetch = require('node-fetch')
 const xml2js = require('xml2js')
-const readXml = require('../utils.js')
-const config = require('../config')
+const { readXml } = require('../helpers/utils')
+const config = require('../configs/app.config')
 
 let pokedex = []
 let pokedict = {}
@@ -100,9 +100,8 @@ const getPokedex = (rawPokedex) => {
 }
 
 const getHomepage = (req, res) => {
-    res.locals.pokedex = pokedex
     req.session.pokedict = pokedict
-    return res.render('index.pug')
+    return res.render('index.pug', { pokedex: pokedex })
 }
 
 module.exports = {
